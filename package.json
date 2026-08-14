@@ -1,5 +1,5 @@
 {
-  "name": "comet-torrserver-bridge",
+  "name": "comet-torrserver-bridge-stremio-addon",
   "version": "1.0.0",
   "private": true,
   "main": "server.js",

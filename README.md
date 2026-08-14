@@ -1,4 +1,4 @@
-# comet-torrserver-bridge
+# comet-torrserver-bridge-stremio-addon
 
 A Stremio proxy addon that plays Comet's torrent results through TorrServer instead of Stremio's built-in torrent engine.
 
@@ -9,15 +9,15 @@ A Stremio proxy addon that plays Comet's torrent results through TorrServer inst
 2. Build and run:
 
    ```bash
-   docker build -t comet-torrserver-bridge .
+   docker build -t comet-torrserver-bridge-stremio-addon .
 
    docker run -d \
-     --name comet-torrserver-bridge \
+     --name comet-torrserver-bridge-stremio-addon \
      --restart unless-stopped \
      -p 7100:7100 \
      -e COMET_BASE_URL="http://host.docker.internal:8000/<your-token>" \
      -e TORRSERVER_URL="http://host.docker.internal:8090" \
-     comet-torrserver-bridge
+     comet-torrserver-bridge-stremio-addon
    ```
 
 3. Install in Stremio: add `http://<host>:7100/manifest.json` via "Search or paste link".
@@ -33,5 +33,5 @@ A Stremio proxy addon that plays Comet's torrent results through TorrServer inst
 ## Logs
 
 ```bash
-docker logs -f comet-torrserver-bridge
+docker logs -f comet-torrserver-bridge-stremio-addon
 ```
