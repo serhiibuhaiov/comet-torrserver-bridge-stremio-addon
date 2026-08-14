@@ -44,6 +44,10 @@ const RESOLVE_CACHE_TTL_MS = envInt('RESOLVE_CACHE_TTL_MS', 1800000); // 30 min
 const fileListCache = new Map(); // infoHash -> { files, expiresAt }
 const inFlightResolutions = new Map(); // infoHash -> Promise<files|null>, dedupes concurrent resolves
 
+// Backstop for entries whose infoHash is never looked up again after expiry
+// (getCachedFileList only evicts on read) — keeps the cache from growing forever.
+setInterval(sweepFileListCache, RESOLVE_CACHE_TTL_MS).unref();
+
 if (!COMET_BASE_URL) {
   console.error('COMET_BASE_URL is not set. See README.');
   process.exit(1);
@@ -306,6 +310,13 @@ function getCachedFileList(infoHash) {
     return null;
   }
   return entry.files;
+}
+
+function sweepFileListCache() {
+  const now = Date.now();
+  for (const [infoHash, entry] of fileListCache) {
+    if (entry.expiresAt <= now) fileListCache.delete(infoHash);
+  }
 }
 
 function findFileId(files, expectedFilename, expectedSize) {
