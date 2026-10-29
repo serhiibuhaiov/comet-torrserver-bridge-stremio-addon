@@ -26,7 +26,7 @@ A Stremio proxy addon that plays Comet's torrent results through TorrServer inst
    docker build -t comet-torrserver-bridge-stremio-addon .
    ```
 
-3. Install in Stremio: add `http://<host>:7100/manifest.json` via "Search or paste link".
+3. Install in Stremio: add `http://<host>:7100/manifest.json` via "Search or paste link". The addon answers both IMDb (`tt…`) and Kitsu (`kitsu:…`) IDs, so anime opened from the Anime Kitsu catalog works too. After upgrading from a `tt`-only version, reinstall the addon so Stremio picks up the new manifest.
 
 ## Configuration
 

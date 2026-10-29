@@ -60,13 +60,13 @@ if (!COMET_BASE_URL) {
 app.get('/manifest.json', (req, res) => {
   res.json({
     id: 'org.local.comet.torrserver.bridge',
-    version: '1.0.0',
+    version: '1.1.0',
     name: 'Comet via TorrServer',
     description: "Comet results played through TorrServer instead of Stremio's built-in torrent engine",
     resources: ['stream'],
     types: ['movie', 'series'],
     catalogs: [],
-    idPrefixes: ['tt'],
+    idPrefixes: ['tt', 'kitsu'],
     behaviorHints: { configurable: false }
   });
 });
