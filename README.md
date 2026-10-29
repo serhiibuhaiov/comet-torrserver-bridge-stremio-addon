@@ -35,6 +35,8 @@ A Stremio proxy addon that plays Comet's torrent results through TorrServer inst
 | `COMET_BASE_URL` | — (required) | Comet's base URL, including its config token, without `/manifest.json` |
 | `TORRSERVER_URL` | `http://host.docker.internal:8090` | TorrServer address |
 | `MAX_STREAMS` | `8` | Top N Comet results to resolve via TorrServer |
+| `COMET_TIMEOUT_MS` | `120000` | Max wait for Comet's search response |
+| `COMET_RETRY_MAX_ELAPSED_MS` | `10000` | Empty Comet replies are retried (up to 3×) only if they came back faster than this; a slower empty reply means Comet finished a real search |
 
 ## Logs
 

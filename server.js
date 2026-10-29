@@ -34,6 +34,10 @@ const MAX_STREAMS = envInt('MAX_STREAMS', 8);
 // this needs comfortable headroom above that rather than a "sensible" short default.
 const COMET_TIMEOUT_MS = envInt('COMET_TIMEOUT_MS', 120000);
 
+// An empty Comet reply that took longer than this came from a finished live
+// scrape, not a placeholder — retrying would just repeat the whole scrape.
+const COMET_RETRY_MAX_ELAPSED_MS = envInt('COMET_RETRY_MAX_ELAPSED_MS', 10000);
+
 // Max wait for TorrServer's file list; falls back to a fileIdx+1 guess on timeout.
 const RESOLVE_TIMEOUT_MS = envInt('RESOLVE_TIMEOUT_MS', 8000);
 const RESOLVE_POLL_INTERVAL_MS = envInt('RESOLVE_POLL_INTERVAL_MS', 400);
@@ -74,13 +78,16 @@ app.get('/stream/:type/:id.json', async (req, res) => {
 
     // Comet may still be searching (placeholder-only), or Jackett may briefly
     // return 0 results — retry a few times instead of forcing a page reload.
+    let startedAt = Date.now();
     let rawStreams = await fetchComet(cometUrl);
     for (const delayMs of [1000, 2000, 3000]) {
       const isEmptyOrPlaceholder = rawStreams.every(
         s => !s.infoHash && !(s.url || '').startsWith('magnet:')
       );
       if (!isEmptyOrPlaceholder) break;
+      if (Date.now() - startedAt > COMET_RETRY_MAX_ELAPSED_MS) break;
       await new Promise(r => setTimeout(r, delayMs));
+      startedAt = Date.now();
       rawStreams = await fetchComet(cometUrl);
     }
 
